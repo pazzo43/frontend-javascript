@@ -1,65 +1,68 @@
-a TypeScript about defining a flexible interface for a Teacher object.
+TypeScript assignment about defining a flexible interface for a Teacher object.
+File: main.ts
+/**
+ * Represents a Teacher object.
+ * - firstName and lastName are immutable.
+ * - fullTimeEmployee and location are required.
+ * - yearsOfExperience is optional.
+ * - Any additional attributes (e.g., contract) are allowed.
+ */
 
-Here’s how to do it step-by-step
-  Folder setup
-
-1.In your project directory, run:
-mkdir task_1
-
-2.Copy the following config files into the new folder:
-
-package.json
-
-tsconfig.json
-
-webpack.config.js
-
-Your structure should look like this:
-task_1/
-├── package.json
-├── tsconfig.json
-├── webpack.config.js
-└── main.ts
-
-Code (main.ts)
-
-Now open main.ts and add the following TypeScript code:
 interface Teacher {
-  readonly firstName: string;       // read-only property
-  readonly lastName: string;        // read-only property
-  fullTimeEmployee: boolean;        // required
-  yearsOfExperience?: number;       // optional
-  location: string;                 // required
-  [key: string]: any;               // allows extra properties
+  readonly firstName: string;
+  readonly lastName: string;
+  fullTimeEmployee: boolean;
+  yearsOfExperience?: number;
+  location: string;
+  [key: string]: unknown; // allows extra attributes while keeping type safety
 }
 
-// Example usage:
-const teacher3: Teacher = {
+// ✅ Example instances
+const teacher1: Teacher = {
+  firstName: 'Alice',
+  lastName: 'Smith',
+  fullTimeEmployee: true,
+  location: 'Paris',
+  yearsOfExperience: 5,
+  contract: true,
+};
+
+const teacher2: Teacher = {
   firstName: 'John',
-  fullTimeEmployee: false,
   lastName: 'Doe',
+  fullTimeEmployee: false,
   location: 'London',
   contract: false,
 };
 
-console.log(teacher3);
-
-Explanation
-
-readonly → ensures firstName and lastName cannot be changed after initialization.
-
-? → makes yearsOfExperience optional.
-
-[key: string]: any → allows adding any other custom properties (like contract).
-
-Example output
-
-When you compile and run (npx webpack or tsc && node dist/main.js), it should print:
-{
-  firstName: 'John',
-  fullTimeEmployee: false,
-  lastName: 'Doe',
-  location: 'London',
-  contract: false
+// 🧾 Helper function to display teacher info
+function printTeacherInfo(teacher: Teacher): void {
+  console.log('--- Teacher Info ---');
+  Object.entries(teacher).forEach(([key, value]) => {
+    console.log(`${key}: ${value}`);
+  });
+  console.log('--------------------\n');
 }
+
+// 🧪 Test
+printTeacherInfo(teacher1);
+printTeacherInfo(teacher2);
+
+Example output:
+--- Teacher Info ---
+firstName: Alice
+lastName: Smith
+fullTimeEmployee: true
+location: Paris
+yearsOfExperience: 5
+contract: true
+--------------------
+
+--- Teacher Info ---
+firstName: John
+lastName: Doe
+fullTimeEmployee: false
+location: London
+contract: false
+--------------------
 
