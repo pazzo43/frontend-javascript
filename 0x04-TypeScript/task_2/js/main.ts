@@ -1,82 +1,83 @@
-File: main.ts
-// DirectorInterface interface
-interface DirectorInterface {
-  workFromHome(): string;
-  getCoffeeBreak(): string;
-  workDirectorTasks(): string;
+Looking at the tasks, I need to create functions that work with employee types and use type predicates. Based on the expected results, I can infer the structure of the employee types and related functions. Let me create the solution:
+// Define the employee interfaces and types
+interface Teacher {
+  type: 'teacher';
+  workTeacherTasks(): void;
 }
 
-// TeacherInterface interface
-interface TeacherInterface {
-  workFromHome(): string;
-  getCoffeeBreak(): string;
-  workTeacherTasks(): string;
+interface Director {
+  type: 'director';
+  workDirectorTasks(): void;
 }
 
-// Director class implementing DirectorInterface
-class Director implements DirectorInterface {
-  workFromHome(): string {
-    return 'Working from home';
-  }
+type Employee = Teacher | Director;
 
-  getCoffeeBreak(): string {
-    return 'Getting a coffee break';
-  }
-
-  workDirectorTasks(): string {
-    return 'Getting to director tasks';
-  }
-}
-
-// Teacher class implementing TeacherInterface
-class Teacher implements TeacherInterface {
-  workFromHome(): string {
-    return 'Cannot work from home';
-  }
-
-  getCoffeeBreak(): string {
-    return 'Cannot have a break';
-  }
-
-  workTeacherTasks(): string {
-    return 'Getting to work';
-  }
-}
-
-// createEmployee function
-function createEmployee(salary: number | string): Director | Teacher {
-  if (typeof salary === 'number' && salary < 500) {
-    return new Teacher();
+// Factory function to create employees (inferred from expected usage)
+function createEmployee(salary: number): Employee {
+  if (salary < 500) {
+    return {
+      type: 'teacher',
+      workTeacherTasks: () => console.log('Getting to work')
+    } as Teacher;
   } else {
-    return new Director();
+    return {
+      type: 'director',
+      workDirectorTasks: () => console.log('Getting to director tasks')
+    } as Director;
   }
 }
 
-// Example usage
-console.log(createEmployee(200));   // Teacher
-console.log(createEmployee(1000));  // Director
-console.log(createEmployee('$500')); // Director
+// Type predicate function to check if employee is a Director
+function isDirector(employee: Employee): employee is Director {
+  return employee.type === 'director';
+}
 
-✅ Explanation
+// Function to execute work based on employee type
+function executeWork(employee: Employee): void {
+  if (isDirector(employee)) {
+    employee.workDirectorTasks();
+  } else {
+    employee.workTeacherTasks();
+  }
+}
 
-Interfaces
+// Test the functions (as shown in expected results)
+executeWork(createEmployee(200));    // Output: Getting to work
+executeWork(createEmployee(1000));   // Output: Getting to director tasks
 
-DirectorInterface and TeacherInterface both define three methods returning strings.
+Explanation:
 
-Classes
+Interfaces and Types:
 
-Director and Teacher implement their respective interfaces, providing the correct method behaviors.
+Teacher interface with type: 'teacher' and workTeacherTasks method
 
-Function createEmployee()
+Director interface with type: 'director' and workDirectorTasks method
 
-Accepts salary (either number or string).
+Employee type as a union of Teacher | Director
 
-If it’s a number less than 500, it returns a Teacher.
+isDirector function:
 
-Otherwise, it returns a Director.
+Uses a type predicate employee is Director to narrow the type
 
-Expected Output
-Teacher {}
-Director {}
-Director {}
+Checks the type property to determine if the employee is a Director
+
+executeWork function:
+
+Uses isDirector type guard to check the employee type
+
+Calls the appropriate method based on the employee type
+
+TypeScript knows the correct type within each branch due to the type predicate
+
+createEmployee function:
+
+Factory function that creates employees based on salary
+
+Salary < 500 creates a Teacher, otherwise creates a Director
+
+This matches the expected behavior shown in the test cases
+
+The type predicate isDirector allows TypeScript to properly narrow the type within conditional blocks, ensuring type safety when calling the specific methods for each employee type.
+
+
 
