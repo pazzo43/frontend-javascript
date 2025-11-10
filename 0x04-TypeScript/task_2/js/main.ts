@@ -1,83 +1,108 @@
-Looking at the tasks, I need to create functions that work with employee types and use type predicates. Based on the expected results, I can infer the structure of the employee types and related functions. Let me create the solution:
-// Define the employee interfaces and types
-interface Teacher {
-  type: 'teacher';
-  workTeacherTasks(): void;
+Here is the complete TypeScript code that implements the requested interfaces, classes, and the factory function, following professional development standards.
+  TypeScript Implementation
+// 1. DirectorInterface Interface
+/**
+ * Interface defining the required methods for a Director.
+ */
+interface DirectorInterface {
+  workFromHome(): string;
+  getCoffeeBreak(): string;
+  workDirectorTasks(): string;
 }
 
-interface Director {
-  type: 'director';
-  workDirectorTasks(): void;
+// 2. TeacherInterface Interface
+/**
+ * Interface defining the required methods for a Teacher.
+ */
+interface TeacherInterface {
+  workFromHome(): string;
+  getCoffeeBreak(): string;
+  workTeacherTasks(): string;
 }
 
-type Employee = Teacher | Director;
+// ---
 
-// Factory function to create employees (inferred from expected usage)
-function createEmployee(salary: number): Employee {
-  if (salary < 500) {
-    return {
-      type: 'teacher',
-      workTeacherTasks: () => console.log('Getting to work')
-    } as Teacher;
-  } else {
-    return {
-      type: 'director',
-      workDirectorTasks: () => console.log('Getting to director tasks')
-    } as Director;
+// 3. Director Class
+/**
+ * Class implementing the DirectorInterface.
+ */
+class Director implements DirectorInterface {
+  workFromHome(): string {
+    return 'Working from home';
+  }
+
+  getCoffeeBreak(): string {
+    // Note: The prompt used 'getToWork' but the interface method is 'getCoffeeBreak'.
+    // Implementing 'getCoffeeBreak' as requested:
+    return 'Getting a coffee break';
+  }
+
+  workDirectorTasks(): string {
+    return 'Getting to director tasks';
   }
 }
 
-// Type predicate function to check if employee is a Director
-function isDirector(employee: Employee): employee is Director {
-  return employee.type === 'director';
-}
+// 4. Teacher Class
+/**
+ * Class implementing the TeacherInterface.
+ */
+class Teacher implements TeacherInterface {
+  workFromHome(): string {
+    return 'Cannot work from home';
+  }
 
-// Function to execute work based on employee type
-function executeWork(employee: Employee): void {
-  if (isDirector(employee)) {
-    employee.workDirectorTasks();
-  } else {
-    employee.workTeacherTasks();
+  getCoffeeBreak(): string {
+    return 'Cannot have a break';
+  }
+
+  workTeacherTasks(): string {
+    return 'Getting to work';
   }
 }
 
-// Test the functions (as shown in expected results)
-executeWork(createEmployee(200));    // Output: Getting to work
-executeWork(createEmployee(1000));   // Output: Getting to director tasks
+// ---
 
-Explanation:
+// 5. createEmployee Function
+/**
+ * Factory function to create either a Director or a Teacher based on salary.
+ * @param salary The employee's salary (number or string).
+ * @returns An instance of Director or Teacher.
+ */
+function createEmployee(salary: number | string): Director | Teacher {
+  // Convert string salary to number if necessary for comparison
+  const numericSalary = typeof salary === 'string' ? parseFloat(salary.replace(/[^\d.]/g, '')) : salary;
 
-Interfaces and Types:
+  // Check the condition: if salary is a number AND less than 500, return Teacher.
+  if (typeof numericSalary === 'number' && numericSalary < 500) {
+    return new Teacher();
+  }
+  
+  // Otherwise, return a Director.
+  return new Director();
+}
 
-Teacher interface with type: 'teacher' and workTeacherTasks method
+// ---
 
-Director interface with type: 'director' and workDirectorTasks method
+// 6. Expected Results (Testing the createEmployee function)
+console.log('--- Testing createEmployee function ---');
 
-Employee type as a union of Teacher | Director
+// Test Case 1: Salary is a number, less than 500
+const employee1 = createEmployee(200);
+console.log(`Salary 200: Employee is ${employee1.constructor.name}`); // Output: Teacher
 
-isDirector function:
+// Test Case 2: Salary is a number, 500 or more
+const employee2 = createEmployee(1000);
+console.log(`Salary 1000: Employee is ${employee2.constructor.name}`); // Output: Director
 
-Uses a type predicate employee is Director to narrow the type
+// Test Case 3: Salary is a string
+const employee3 = createEmployee('$500');
+console.log(`Salary $500: Employee is ${employee3.constructor.name}`); // Output: Director
 
-Checks the type property to determine if the employee is a Director
+// ---
 
-executeWork function:
-
-Uses isDirector type guard to check the employee type
-
-Calls the appropriate method based on the employee type
-
-TypeScript knows the correct type within each branch due to the type predicate
-
-createEmployee function:
-
-Factory function that creates employees based on salary
-
-Salary < 500 creates a Teacher, otherwise creates a Director
-
-This matches the expected behavior shown in the test cases
-
-The type predicate isDirector allows TypeScript to properly narrow the type within conditional blocks, ensuring type safety when calling the specific methods for each employee type.
-
+// 7. Testing methods (Example usage of the created instances)
+console.log('\n--- Testing class methods ---');
+console.log('Director Tasks:', (employee2 as Director).workDirectorTasks()); // Getting to director tasks
+console.log('Teacher Tasks:', (employee1 as Teacher).workTeacherTasks()); // Getting to work
 
 
