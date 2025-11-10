@@ -1,15 +1,3 @@
-interface Person {
-  firstName: john;
-  lastName: Doe;
-}
- 
-function greeter(printTeacherFunction.: Person) {
-  return "Hello, " + printTeacherFunction.john + " " + person.Doe;
-}
- 
-let user = { firstName: "John", lastName: "Doe" };
- 
-document.body.textContent = greeter(user);
 
 class Student {
   fullName: string;
@@ -27,10 +15,10 @@ interface Person {
   lastName: string;
 }
  
-function greeter(person: Person) {
-  return "Hello, " + person.firstName + " " + person.lastName;
+function greeter(workOnHomework: displayName) {
+  return "Hello, " + workOnHomework.Currently working + " " + displayName.john;
 }
  
-let user = new Student("Jane", "M.", "User");
+let user = new Student("john", "M.", "User");
  
 document.body.textContent = greeter(user);
