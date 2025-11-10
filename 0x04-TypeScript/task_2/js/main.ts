@@ -1,6 +1,5 @@
-Here is the complete TypeScript code that implements the requested interfaces, classes, and the factory function, following professional development standards.
-  TypeScript Implementation
-// 1. DirectorInterface Interface
+// --- INTERFACES ---
+
 /**
  * Interface defining the required methods for a Director.
  */
@@ -10,7 +9,6 @@ interface DirectorInterface {
   workDirectorTasks(): string;
 }
 
-// 2. TeacherInterface Interface
 /**
  * Interface defining the required methods for a Teacher.
  */
@@ -20,9 +18,8 @@ interface TeacherInterface {
   workTeacherTasks(): string;
 }
 
-// ---
+// --- CLASSES ---
 
-// 3. Director Class
 /**
  * Class implementing the DirectorInterface.
  */
@@ -32,8 +29,6 @@ class Director implements DirectorInterface {
   }
 
   getCoffeeBreak(): string {
-    // Note: The prompt used 'getToWork' but the interface method is 'getCoffeeBreak'.
-    // Implementing 'getCoffeeBreak' as requested:
     return 'Getting a coffee break';
   }
 
@@ -42,7 +37,6 @@ class Director implements DirectorInterface {
   }
 }
 
-// 4. Teacher Class
 /**
  * Class implementing the TeacherInterface.
  */
@@ -60,9 +54,8 @@ class Teacher implements TeacherInterface {
   }
 }
 
-// ---
+// --- FACTORY FUNCTION ---
 
-// 5. createEmployee Function
 /**
  * Factory function to create either a Director or a Teacher based on salary.
  * @param salary The employee's salary (number or string).
@@ -76,33 +69,47 @@ function createEmployee(salary: number | string): Director | Teacher {
   if (typeof numericSalary === 'number' && numericSalary < 500) {
     return new Teacher();
   }
-  
+
   // Otherwise, return a Director.
   return new Director();
 }
 
-// ---
+// --- NEW SUBJECTS AND TEACHING FUNCTION ---
 
-// 6. Expected Results (Testing the createEmployee function)
+/**
+ * String literal type allowing only 'Math' or 'History'.
+ */
+type Subjects = 'Math' | 'History';
+
+/**
+ * Returns a string indicating which class the teacher is currently teaching.
+ * @param todayClass The subject being taught ('Math' or 'History').
+ * @returns A string like "Teaching Math".
+ */
+function teachClass(todayClass: Subjects): string {
+  if (todayClass === 'Math') {
+    return 'Teaching Math';
+  }
+  // Since Subjects is a strict literal type, any other value must be 'History'.
+  return 'Teaching History';
+}
+
+// --- EXPECTED RESULTS AND TESTING ---
+
 console.log('--- Testing createEmployee function ---');
 
-// Test Case 1: Salary is a number, less than 500
 const employee1 = createEmployee(200);
-console.log(`Salary 200: Employee is ${employee1.constructor.name}`); // Output: Teacher
+console.log(`Salary 200: Employee is ${employee1.constructor.name}`); // Expected: Teacher
 
-// Test Case 2: Salary is a number, 500 or more
 const employee2 = createEmployee(1000);
-console.log(`Salary 1000: Employee is ${employee2.constructor.name}`); // Output: Director
+console.log(`Salary 1000: Employee is ${employee2.constructor.name}`); // Expected: Director
 
-// Test Case 3: Salary is a string
 const employee3 = createEmployee('$500');
-console.log(`Salary $500: Employee is ${employee3.constructor.name}`); // Output: Director
+console.log(`Salary $500: Employee is ${employee3.constructor.name}`); // Expected: Director
 
-// ---
+console.log('\n--- Testing teachClass function ---');
 
-// 7. Testing methods (Example usage of the created instances)
-console.log('\n--- Testing class methods ---');
-console.log('Director Tasks:', (employee2 as Director).workDirectorTasks()); // Getting to director tasks
-console.log('Teacher Tasks:', (employee1 as Teacher).workTeacherTasks()); // Getting to work
+console.log(`teachClass('Math'): ${teachClass('Math')}`);     // Expected: Teaching Math
+console.log(`teachClass('History'): ${teachClass('History')}`); // Expected: Teaching History
 
 
